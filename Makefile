@@ -2,6 +2,8 @@ include .env
 
 .PHONY: up stop down container_php run_command install_dependencies
 
+DRY_RUN ?= 1
+
 up:
 	docker compose up -d
 
@@ -19,3 +21,9 @@ run_command:
 
 install_dependencies:
 	make run_command CMD="composer install --optimize-autoloader"
+
+lint:
+	make run_command CMD="php vendor/bin/php-cs-fixer fix --diff"
+
+lint-dry-run:
+	make run_command CMD="php vendor/bin/php-cs-fixer fix --diff --dry-run"
