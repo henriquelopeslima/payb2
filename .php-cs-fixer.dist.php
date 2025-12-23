@@ -12,7 +12,7 @@ return new PhpCsFixer\Config()
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony' => true,
-        '@PHP84Migration' => true,
+        '@PHP8x4Migration' => true,
         'declare_strict_types' => true,
         'void_return' => true,
         'yoda_style' => true,
