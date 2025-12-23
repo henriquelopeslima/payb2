@@ -27,3 +27,8 @@ lint:
 
 lint-dry-run:
 	make run_command CMD="php vendor/bin/php-cs-fixer fix --diff --dry-run"
+
+copy_dist_files:
+	cp .php-cs-fixer.dist.php .php-cs-fixer.php
+
+setup: up install_dependencies copy_dist_files
