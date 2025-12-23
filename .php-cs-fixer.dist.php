@@ -18,5 +18,6 @@ return new PhpCsFixer\Config()
         'yoda_style' => true,
         'single_line_empty_body' => true,
         'concat_space' => ['spacing' => 'none'],
+        'global_namespace_import' => true,
     ])
     ->setFinder($finder);
