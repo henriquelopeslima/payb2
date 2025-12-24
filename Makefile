@@ -1,6 +1,6 @@
 include .env
 
-.PHONY: up stop down container_php run_command install_dependencies migrations
+.PHONY: up stop down container_php run_command install_dependencies migrations fixtures
 
 DRY_RUN ?= 1
 
@@ -24,6 +24,9 @@ install_dependencies:
 
 migrations:
 	make run_command CMD="bin/console doctrine:migrations:migrate --no-interaction"
+
+fixtures:
+	make run_command CMD="bin/console doctrine:fixture:load --no-interaction"
 
 lint:
 	make run_command CMD="php vendor/bin/php-cs-fixer fix --diff"
