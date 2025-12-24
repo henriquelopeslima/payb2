@@ -1,6 +1,6 @@
 include .env
 
-.PHONY: up stop down container_php run_command install_dependencies
+.PHONY: up stop down container_php run_command install_dependencies migrations
 
 DRY_RUN ?= 1
 
@@ -21,6 +21,9 @@ run_command:
 
 install_dependencies:
 	make run_command CMD="composer install --optimize-autoloader"
+
+migrations:
+	make run_command CMD="bin/console doctrine:migrations:migrate --no-interaction"
 
 lint:
 	make run_command CMD="php vendor/bin/php-cs-fixer fix --diff"
