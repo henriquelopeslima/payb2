@@ -15,6 +15,7 @@ use Symfony\Component\Uid\Uuid;
 
 final class UserFixtures extends Fixture
 {
+    public const string USER_ID_PREFIX = 'user';
     public const string USER_ID_1 = '019b4deb-735f-7b74-924b-4d2311c76edd';
     public const string USER_ID_2 = '019b4deb-6194-7784-b219-3ddc079928ab';
     public const string USER_ID_3 = '019b4deb-4cad-7e0b-b000-052f54a76458';
@@ -114,6 +115,8 @@ final class UserFixtures extends Fixture
                 passwordHash: $hash(plain: 'password123'),
                 type: $data['type'],
             );
+
+            $this->setReference(sprintf('%s-%s', self::USER_ID_PREFIX, $data['id']), $user);
 
             $manager->persist($user);
         }
