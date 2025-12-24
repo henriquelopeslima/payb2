@@ -10,6 +10,7 @@ doctrine:
         types:
             email_vo: App\Infrastructure\Doctrine\Type\EmailType
             document_vo: App\Infrastructure\Doctrine\Type\DocumentType
+            money_vo: App\Infrastructure\Doctrine\Type\MoneyType
             password_hash_vo: App\Infrastructure\Doctrine\Type\PasswordHashType
             uuid: Symfony\Bridge\Doctrine\Types\UuidType
             user_type_enum: App\Infrastructure\Doctrine\Type\Enum\UserTypeType
