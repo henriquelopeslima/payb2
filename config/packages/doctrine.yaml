@@ -14,6 +14,7 @@ doctrine:
             password_hash_vo: App\Infrastructure\Doctrine\Type\PasswordHashType
             uuid: Symfony\Bridge\Doctrine\Types\UuidType
             user_type_enum: App\Infrastructure\Doctrine\Type\Enum\UserTypeType
+            transfer_status_enum: App\Infrastructure\Doctrine\Type\Enum\TransferStatusType
 
     orm:
         validate_xml_mapping: true
