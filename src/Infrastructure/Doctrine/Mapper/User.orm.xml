@@ -1,0 +1,18 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Domain\Entity\User" table="users">
+        <id name="id" type="uuid" column="id">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="fullName" column="full_name" length="255"/>
+
+        <field name="document" column="document" type="document_vo" length="50" unique="true"/>
+        <field name="email" column="email" type="email_vo" length="180" unique="true"/>
+        <field name="passwordHash" column="password_hash" type="password_hash_vo" length="255"/>
+
+        <field name="type" column="type" type="user_type_enum" length="50"/>
+    </entity>
+</doctrine-mapping>
