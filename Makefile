@@ -1,6 +1,6 @@
 include .env
 
-.PHONY: up stop down container_php run_command install_dependencies migrations fixtures
+.PHONY: up stop down container_php run_command install_dependencies migrations fixtures lint lint-dry-run copy_dist_files setup
 
 DRY_RUN ?= 1
 
