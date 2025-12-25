@@ -6,7 +6,7 @@ $finder = new PhpCsFixer\Finder()
     ->ignoreDotFiles(false)
     ->ignoreVCSIgnored(true)
     ->in(__DIR__)
-    ->exclude(['logs', 'var', 'vendor', 'node_modules']);
+    ->exclude(['config', 'logs', 'var', 'vendor', 'node_modules']);
 
 return new PhpCsFixer\Config()
     ->setRiskyAllowed(true)
