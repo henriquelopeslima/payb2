@@ -26,6 +26,9 @@ services:
         resource: '../fixtures'
 
     # Domain bindings
+    App\Domain\Repository\TransferRepositoryInterface: '@App\Infrastructure\Doctrine\Repository\DoctrineTransferRepository'
+    App\Domain\Repository\UserRepositoryInterface: '@App\Infrastructure\Doctrine\Repository\DoctrineUserRepository'
+    App\Domain\Repository\WalletRepositoryInterface: '@App\Infrastructure\Doctrine\Repository\DoctrineWalletRepository'
     App\Domain\Service\TransferAuthorizationServiceInterface: '@App\Infrastructure\Http\Service\TransferAuthorizationService'
 
     # Application bindings
