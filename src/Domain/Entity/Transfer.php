@@ -6,8 +6,8 @@ namespace App\Domain\Entity;
 
 use App\Domain\Entity\Enum\TransferStatus;
 use App\Domain\Entity\ValueObject\Money;
+use App\Domain\Exception\SelfTransferNotAllowedException;
 use DateTimeImmutable;
-use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 
 final class Transfer
@@ -20,8 +20,8 @@ final class Transfer
         private TransferStatus $status,
         private readonly DateTimeImmutable $createdAt,
     ) {
-        if ($payer->id() === $payee->id()) {
-            throw new InvalidArgumentException(message: 'Payer and payee must be different.');
+        if ($payer->id()->toRfc4122() === $payee->id()->toRfc4122()) {
+            throw new SelfTransferNotAllowedException();
         }
 
         $this->id = Uuid::v7();
