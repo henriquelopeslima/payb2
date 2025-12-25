@@ -25,6 +25,11 @@ final class Money
         return new self(amountInCents: 0);
     }
 
+    public static function fromFloat(float $value): self
+    {
+        return new self(amountInCents: (int) round(num: $value * 100));
+    }
+
     public function amountInCents(): int
     {
         return $this->amountInCents;
@@ -32,7 +37,7 @@ final class Money
 
     public function add(self $other): self
     {
-        return new self($this->amountInCents + $other->amountInCents);
+        return new self(amountInCents: $this->amountInCents + $other->amountInCents);
     }
 
     public function subtract(self $other): self
@@ -40,7 +45,7 @@ final class Money
         $result = $this->amountInCents - $other->amountInCents;
 
         if ($result < 0) {
-            throw new RuntimeException('Resulting amount cannot be negative.');
+            throw new RuntimeException(message: 'Resulting amount cannot be negative.');
         }
 
         return new self($result);
