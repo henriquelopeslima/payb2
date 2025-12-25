@@ -24,3 +24,6 @@ services:
 
     App\DataFixtures\:
         resource: '../fixtures'
+
+    # Domain bindings
+    App\Domain\Service\TransferAuthorizationServiceInterface: '@App\Infrastructure\Http\Service\TransferAuthorizationService'
