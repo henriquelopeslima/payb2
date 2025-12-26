@@ -34,15 +34,15 @@ final readonly class PerformTransfer
         $payeeId = Uuid::fromString($command->payeeId);
         $amount = Money::fromFloat($command->value);
 
+        if ($payerId->equals($payeeId)) {
+            throw new SelfTransferNotAllowedException();
+        }
+
         $payer = $this->userRepository->findById($payerId);
         $payee = $this->userRepository->findById($payeeId);
 
         if (null === $payer || null === $payee) {
             throw new ResourceNotFoundException(message: 'Payer or payee not found.');
-        }
-
-        if ($payerId->equals($payeeId)) {
-            throw new SelfTransferNotAllowedException();
         }
 
         if (!$payer->canSendMoney()) {
@@ -68,6 +68,6 @@ final readonly class PerformTransfer
             $this->transferRepository->save($transfer);
         });
 
-        return new PerformTransferOutput($transfer->id());
+        return new PerformTransferOutput($transfer->id);
     }
 }
