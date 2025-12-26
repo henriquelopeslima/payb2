@@ -1,0 +1,10 @@
+### Perform a transfer
+
+POST http://localhost/transfer
+Content-Type: application/json
+
+{
+    "value": 100.0,
+    "payer": "019b4deb-735f-7b74-924b-4d2311c76edd",
+    "payee": "019b4deb-6194-7784-b219-3ddc079928ab"
+}
