@@ -28,6 +28,9 @@ migrations:
 fixtures:
 	make run_command CMD="bin/console doctrine:fixture:load --no-interaction"
 
+test:
+	make run_command CMD="bin/phpunit"
+
 lint:
 	make run_command CMD="php vendor/bin/php-cs-fixer fix --diff"
 
@@ -36,5 +39,6 @@ lint-dry-run:
 
 copy_dist_files:
 	cp .php-cs-fixer.dist.php .php-cs-fixer.php
+	cp phpunit.dist.xml phpunit.xml
 
 setup: up install_dependencies copy_dist_files
