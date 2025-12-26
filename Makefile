@@ -41,4 +41,4 @@ copy_dist_files:
 	cp .php-cs-fixer.dist.php .php-cs-fixer.php
 	cp phpunit.dist.xml phpunit.xml
 
-setup: up install_dependencies copy_dist_files
+setup: up install_dependencies copy_dist_files migrations fixtures
