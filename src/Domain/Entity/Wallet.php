@@ -11,31 +11,16 @@ use Symfony\Component\Uid\Uuid;
 final class Wallet
 {
     public function __construct(
-        private Uuid $id,
-        private readonly User $user,
-        private Money $balance,
+        public ?Uuid $id,
+        public readonly User $user,
+        public Money $balance,
     ) {
-        $this->id = Uuid::v7();
+        $this->id = $id ?? Uuid::v7();
     }
 
     public static function createEmpty(Uuid $id, User $user): self
     {
         return new self($id, $user, Money::zero());
-    }
-
-    public function id(): Uuid
-    {
-        return $this->id;
-    }
-
-    public function user(): User
-    {
-        return $this->user;
-    }
-
-    public function balance(): Money
-    {
-        return $this->balance;
     }
 
     public function canDebit(Money $amount): bool

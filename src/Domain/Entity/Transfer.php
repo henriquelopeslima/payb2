@@ -13,18 +13,18 @@ use Symfony\Component\Uid\Uuid;
 final class Transfer
 {
     public function __construct(
-        private Uuid $id,
-        private readonly User $payer,
-        private readonly User $payee,
-        private readonly Money $amount,
-        private TransferStatus $status,
-        private readonly DateTimeImmutable $createdAt,
+        public ?Uuid $id,
+        public readonly User $payer,
+        public readonly User $payee,
+        public readonly Money $amount,
+        public TransferStatus $status,
+        public readonly DateTimeImmutable $createdAt,
     ) {
-        if ($payer->id()->toRfc4122() === $payee->id()->toRfc4122()) {
+        if ($payer->id->toRfc4122() === $payee->id->toRfc4122()) {
             throw new SelfTransferNotAllowedException();
         }
 
-        $this->id = Uuid::v7();
+        $this->id = $id ?? Uuid::v7();
     }
 
     public static function createNew(User $payer, User $payee, Money $amount): self
@@ -37,36 +37,6 @@ final class Transfer
             status: TransferStatus::PENDING,
             createdAt: new DateTimeImmutable(),
         );
-    }
-
-    public function id(): Uuid
-    {
-        return $this->id;
-    }
-
-    public function payer(): User
-    {
-        return $this->payer;
-    }
-
-    public function payee(): User
-    {
-        return $this->payee;
-    }
-
-    public function amount(): Money
-    {
-        return $this->amount;
-    }
-
-    public function status(): TransferStatus
-    {
-        return $this->status;
-    }
-
-    public function createdAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
     }
 
     public function markCompleted(): void
