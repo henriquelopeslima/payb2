@@ -60,4 +60,3 @@ final class MoneyTest extends TestCase
         $this->assertFalse($c->isGreaterOrEqual($a));
     }
 }
-
