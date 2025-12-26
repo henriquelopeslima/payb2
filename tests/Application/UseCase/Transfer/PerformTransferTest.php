@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Application\UseCase\Transfer;
 
 use App\Application\Port\Persistence\TransactionManagerInterface;
+use App\Application\Port\Queue\EventBusInterface;
 use App\Application\UseCase\Transfer\PerformTransfer;
 use App\Application\UseCase\Transfer\PerformTransferCommand;
 use App\Domain\Entity\Enum\UserType;
@@ -14,6 +15,7 @@ use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\Money;
 use App\Domain\Entity\ValueObject\PasswordHash;
 use App\Domain\Entity\Wallet;
+use App\Domain\Event\TransferCompletedEvent;
 use App\Domain\Exception\NotAllowedPayerException;
 use App\Domain\Exception\ResourceNotFoundException;
 use App\Domain\Exception\SelfTransferNotAllowedException;
@@ -35,6 +37,7 @@ final class PerformTransferTest extends TestCase
     private TransferAuthorizationServiceInterface $authService;
     private TransactionManagerInterface $txManager;
     private MoneyTransferrerService $moneyTransferrer;
+    private EventBusInterface $bus;
 
     protected function setUp(): void
     {
@@ -44,6 +47,7 @@ final class PerformTransferTest extends TestCase
         $this->authService = $this->createStub(TransferAuthorizationServiceInterface::class);
         $this->txManager = $this->createStub(TransactionManagerInterface::class);
         $this->moneyTransferrer = $this->createStub(MoneyTransferrerService::class);
+        $this->bus = $this->createStub(EventBusInterface::class);
     }
 
     private function createUseCase(): PerformTransfer
@@ -54,7 +58,8 @@ final class PerformTransferTest extends TestCase
             $this->transferRepo,
             $this->authService,
             $this->txManager,
-            $this->moneyTransferrer
+            $this->moneyTransferrer,
+            $this->bus,
         );
     }
 
@@ -99,6 +104,7 @@ final class PerformTransferTest extends TestCase
         $this->txManager = $this->createMock(TransactionManagerInterface::class);
         $this->moneyTransferrer = $this->createMock(MoneyTransferrerService::class);
         $this->userRepo = $this->createMock(UserRepositoryInterface::class);
+        $this->bus = $this->createMock(EventBusInterface::class);
 
         $payerId = Uuid::v4();
         $payeeId = Uuid::v4();
@@ -158,6 +164,15 @@ final class PerformTransferTest extends TestCase
                 $fn();
             });
 
+        $this->bus->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->callback(function ($event) {
+                    return $event instanceof TransferCompletedEvent
+                        && $event->transferId instanceof Uuid;
+                })
+            );
+
         $output = $this->createUseCase()($command);
 
         $this->assertInstanceOf(Uuid::class, $output->transferId);
@@ -172,6 +187,7 @@ final class PerformTransferTest extends TestCase
         $this->moneyTransferrer = $this->createMock(MoneyTransferrerService::class);
         $this->transferRepo = $this->createMock(TransferRepositoryInterface::class);
         $this->txManager = $this->createMock(TransactionManagerInterface::class);
+        $this->bus = $this->createMock(EventBusInterface::class);
 
         $payerId = Uuid::v4();
         $payeeId = Uuid::v4();
@@ -197,6 +213,8 @@ final class PerformTransferTest extends TestCase
         $this->transferRepo->expects($this->never())->method('save');
         $this->txManager->expects($this->never())->method('transactional');
 
+        $this->bus->expects($this->never())->method('dispatch');
+
         $this->expectException(ResourceNotFoundException::class);
         $this->createUseCase()($command);
     }
@@ -209,6 +227,7 @@ final class PerformTransferTest extends TestCase
         $this->authService = $this->createMock(TransferAuthorizationServiceInterface::class);
         $this->txManager = $this->createMock(TransactionManagerInterface::class);
         $this->moneyTransferrer = $this->createMock(MoneyTransferrerService::class);
+        $this->bus = $this->createMock(EventBusInterface::class);
 
         $id = Uuid::v4();
         $command = new PerformTransferCommand($id->toRfc4122(), $id->toRfc4122(), 10.0);
@@ -220,6 +239,8 @@ final class PerformTransferTest extends TestCase
         $this->walletRepo->expects($this->never())->method('save');
         $this->transferRepo->expects($this->never())->method('save');
         $this->txManager->expects($this->never())->method('transactional');
+
+        $this->bus->expects($this->never())->method('dispatch');
 
         $this->expectException(SelfTransferNotAllowedException::class);
         $this->createUseCase()($command);
@@ -233,6 +254,7 @@ final class PerformTransferTest extends TestCase
         $this->moneyTransferrer = $this->createMock(MoneyTransferrerService::class);
         $this->transferRepo = $this->createMock(TransferRepositoryInterface::class);
         $this->txManager = $this->createMock(TransactionManagerInterface::class);
+        $this->bus = $this->createMock(EventBusInterface::class);
 
         $payerId = Uuid::v4();
         $payeeId = Uuid::v4();
@@ -262,6 +284,8 @@ final class PerformTransferTest extends TestCase
         $this->transferRepo->expects($this->never())->method('save');
         $this->txManager->expects($this->never())->method('transactional');
 
+        $this->bus->expects($this->never())->method('dispatch');
+
         $this->expectException(NotAllowedPayerException::class);
         $this->createUseCase()($command);
     }
@@ -274,6 +298,7 @@ final class PerformTransferTest extends TestCase
         $this->moneyTransferrer = $this->createMock(MoneyTransferrerService::class);
         $this->transferRepo = $this->createMock(TransferRepositoryInterface::class);
         $this->txManager = $this->createMock(TransactionManagerInterface::class);
+        $this->bus = $this->createMock(EventBusInterface::class);
 
         $payerId = Uuid::v4();
         $payeeId = Uuid::v4();
@@ -304,6 +329,8 @@ final class PerformTransferTest extends TestCase
         $this->walletRepo->expects($this->never())->method('save');
         $this->transferRepo->expects($this->never())->method('save');
         $this->txManager->expects($this->never())->method('transactional');
+
+        $this->bus->expects($this->never())->method('dispatch');
 
         $this->expectException(TransferNotAuthorizedException::class);
         $this->createUseCase()($command);
