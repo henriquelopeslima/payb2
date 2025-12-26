@@ -55,6 +55,24 @@ services:
     networks:
       - backend
 
+  messenger-worker:
+      build:
+          context: .
+          dockerfile: docker/php/Dockerfile
+          args:
+              XDEBUG: off
+      container_name: payb2-messenger-worker
+      working_dir: /code
+      depends_on:
+          - php
+      volumes:
+          - ./:/code:delegated
+      networks:
+          - backend
+      restart: unless-stopped
+      command: >
+          sh -lc "php bin/console messenger:consume async -vv"
+
   redis:
     image: redis:7-alpine
     container_name: payb2-redis

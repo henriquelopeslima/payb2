@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Application\UseCase\Transfer;
 
 use App\Application\Port\Persistence\TransactionManagerInterface;
+use App\Application\Port\Queue\EventBusInterface;
 use App\Domain\Entity\Transfer;
 use App\Domain\Entity\ValueObject\Money;
+use App\Domain\Event\TransferCompletedEvent;
 use App\Domain\Exception\NotAllowedPayerException;
 use App\Domain\Exception\ResourceNotFoundException;
 use App\Domain\Exception\SelfTransferNotAllowedException;
@@ -26,6 +28,7 @@ final readonly class PerformTransfer
         private TransferAuthorizationServiceInterface $authorizationService,
         private TransactionManagerInterface $transactionManager,
         private MoneyTransferrerService $moneyTransferrer,
+        private EventBusInterface $bus,
     ) {}
 
     public function __invoke(PerformTransferCommand $command): PerformTransferOutput
@@ -67,6 +70,9 @@ final readonly class PerformTransfer
             $this->walletRepository->save($payeeWallet);
             $this->transferRepository->save($transfer);
         });
+
+        $event = new TransferCompletedEvent(transferId: $transfer->id);
+        $this->bus->dispatch($event);
 
         return new PerformTransferOutput($transfer->id);
     }
