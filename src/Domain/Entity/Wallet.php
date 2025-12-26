@@ -8,7 +8,7 @@ use App\Domain\Entity\ValueObject\Money;
 use App\Domain\Exception\InsufficientBalanceException;
 use Symfony\Component\Uid\Uuid;
 
-final class Wallet
+class Wallet
 {
     public function __construct(
         public ?Uuid $id,

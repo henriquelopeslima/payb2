@@ -10,7 +10,7 @@ use App\Domain\Exception\SelfTransferNotAllowedException;
 use DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
 
-final class Transfer
+class Transfer
 {
     public function __construct(
         public ?Uuid $id,

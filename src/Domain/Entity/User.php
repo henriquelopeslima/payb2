@@ -10,7 +10,7 @@ use App\Domain\Entity\ValueObject\Email;
 use App\Domain\Entity\ValueObject\PasswordHash;
 use Symfony\Component\Uid\Uuid;
 
-final class User
+class User
 {
     public function __construct(
         public ?Uuid $id,
