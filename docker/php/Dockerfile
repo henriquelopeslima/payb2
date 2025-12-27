@@ -9,6 +9,9 @@ RUN apk add --update --no-cache \
     && docker-php-ext-install intl pdo pdo_pgsql \
     && cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
+RUN pecl install redis apcu \
+    && docker-php-ext-enable redis apcu
+
 RUN if [ "$XDEBUG" != "off" ]; then \
         pecl install xdebug \
         && docker-php-ext-enable xdebug; \
@@ -20,8 +23,5 @@ RUN addgroup -g ${PGID} appgroup \
     && adduser -D -G appgroup -u ${PUID} appuser
 
 WORKDIR /code
-
-# Directory for custom PHP and Xdebug configs (mounted via volume)
-# /usr/local/etc/php/conf.d/ already exists in the base image
 
 USER appuser

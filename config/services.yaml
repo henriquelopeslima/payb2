@@ -36,3 +36,16 @@ services:
     App\Application\Port\Queue\EventBusInterface: '@App\Infrastructure\Queue\SymfonyMessageBusAdapter'
     App\Application\Port\Service\NotificationServiceInterface: '@App\Infrastructure\Http\Service\TransferNotificationService'
     App\Application\Port\Service\LoggerInterface: '@App\Infrastructure\Log\Uatu'
+    App\Application\Port\Service\MetricsInterface: '@App\Infrastructure\Metrics\PrometheusMetricsAdapter'
+    App\Application\UseCase\Transfer\PerformTransferInterface: '@App\Infrastructure\Decorator\Observability\TransferObservabilityDecorator'
+
+    # Prometheus bindings
+    Prometheus\Storage\Adapter:
+        class: Prometheus\Storage\APC
+
+    Prometheus\CollectorRegistry:
+        arguments:
+            $storageAdapter: '@Prometheus\Storage\Adapter'
+            $registerDefaultMetrics: true
+
+    Prometheus\RenderTextFormat: ~

@@ -19,7 +19,7 @@ use App\Domain\Service\MoneyTransferrerService;
 use App\Domain\Service\TransferAuthorizationServiceInterface;
 use Symfony\Component\Uid\Uuid;
 
-final readonly class PerformTransfer
+final readonly class PerformTransfer implements PerformTransferInterface
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
