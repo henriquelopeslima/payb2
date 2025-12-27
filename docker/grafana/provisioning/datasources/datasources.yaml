@@ -5,6 +5,8 @@ deleteDatasources:
     orgId: 1
   - name: Loki
     orgId: 1
+  - name: Tempo
+    orgId: 1
 
 datasources:
   - name: Prometheus
@@ -24,3 +26,31 @@ datasources:
     editable: false
     jsonData:
       maxLines: 1000
+
+  - name: Tempo
+    type: tempo
+    access: proxy
+    url: http://tempo:3200
+    editable: false
+    jsonData:
+        httpMethod: GET
+        tracesToLogsV2:
+            datasourceUid: loki
+            spanStartTimeShift: '-10m'
+            spanEndTimeShift: '10m'
+            tags: ['app', 'job']
+            mappedTags: [{ key: 'service.name', value: 'app' }]
+        tracesToMetrics:
+            datasourceUid: prometheus
+            tags: ['service.name']
+            queries:
+                - name: 'Request rate'
+                  query: 'sum(rate(http_server_duration_seconds_count[5m])) by (service)'
+        nodeGraph:
+            enabled: true
+        search:
+            hide: false
+        lokiSearch:
+            datasourceUid: loki
+        spanBar:
+            type: 'None'

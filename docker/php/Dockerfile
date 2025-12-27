@@ -9,8 +9,8 @@ RUN apk add --update --no-cache \
     && docker-php-ext-install intl pdo pdo_pgsql \
     && cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
-RUN pecl install redis apcu \
-    && docker-php-ext-enable redis apcu
+RUN pecl install redis apcu opentelemetry \
+    && docker-php-ext-enable redis apcu opentelemetry
 
 RUN if [ "$XDEBUG" != "off" ]; then \
         pecl install xdebug \

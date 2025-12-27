@@ -105,12 +105,24 @@ services:
     networks:
       - backend
 
+  tempo:
+    image: grafana/tempo:latest
+    container_name: payb2-tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+        - ./docker/tempo/tempo.yaml:/etc/tempo.yaml
+    ports:
+        - "4318:4318"
+    networks:
+        - backend
+
   grafana:
     image: grafana/grafana:11.0.0
     container_name: payb2-grafana
     depends_on:
       - prometheus
       - loki
+      - tempo
     ports:
       - "3000:3000"
     environment:

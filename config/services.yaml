@@ -49,3 +49,19 @@ services:
             $registerDefaultMetrics: true
 
     Prometheus\RenderTextFormat: ~
+
+    # OpenTelemetry
+    OpenTelemetry\SDK\Common\Export\Stream\StreamTransportFactory: ~
+    OpenTelemetry\SDK\Common\Export\TransportInterface:
+        factory: [ '@OpenTelemetry\SDK\Common\Export\Stream\StreamTransportFactory', 'create' ]
+        arguments:
+            $endpoint: 'php://stdout'
+            $contentType: 'application/json'
+    OpenTelemetry\SDK\Trace\SpanExporter\ConsoleSpanExporter: ~
+    OpenTelemetry\SDK\Trace\SpanProcessor\SimpleSpanProcessor:
+        arguments:
+            $exporter: '@OpenTelemetry\SDK\Trace\SpanExporter\ConsoleSpanExporter'
+    OpenTelemetry\SDK\Trace\TracerProvider:
+        arguments:
+            $spanProcessors: [ '@OpenTelemetry\SDK\Trace\SpanProcessor\SimpleSpanProcessor' ]
+    OpenTelemetry\API\Trace\TracerProviderInterface: '@OpenTelemetry\SDK\Trace\TracerProvider'
