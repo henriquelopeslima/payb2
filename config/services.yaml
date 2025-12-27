@@ -35,3 +35,4 @@ services:
     App\Application\Port\Persistence\TransactionManagerInterface: '@App\Infrastructure\Doctrine\Transaction\DoctrineTransactionManager'
     App\Application\Port\Queue\EventBusInterface: '@App\Infrastructure\Queue\SymfonyMessageBusAdapter'
     App\Application\Port\Service\NotificationServiceInterface: '@App\Infrastructure\Http\Service\TransferNotificationService'
+    App\Application\Port\Service\LoggerInterface: '@App\Infrastructure\Log\Uatu'
