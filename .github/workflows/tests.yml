@@ -1,0 +1,34 @@
+name: Tests
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    php-unit:
+        name: Run PHPUnit
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Start the aurora
+              run: docker compose up -d --build
+
+            - name: Install dependencies
+              run: docker compose exec --user root php composer install
+
+            - name: Create the phpunit.xml
+              run: docker compose exec --user root php cp phpunit.xml.dist phpunit.xml
+
+            - name: Run migrations
+              run: docker compose exec php bin/console d:m:migrate -n
+
+            - name: Run fixtures
+              run: docker compose exec php bin/console d:f:l -n
+
+            - name: Start the PHPUnit
+              run: docker compose exec --user root php bin/phpunit
