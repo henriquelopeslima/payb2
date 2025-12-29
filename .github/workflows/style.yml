@@ -1,0 +1,42 @@
+name: Style
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  code-style:
+    name: Run PHP-CS-Fixer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist --ignore-platform-req=ext-opentelemetry
+
+      - name: Create the .php-cs-fixer.php
+        run: |
+          if [ -f .php-cs-fixer.dist.php ]; then cp .php-cs-fixer.dist.php .php-cs-fixer.php; fi
+
+      - name: Download PHP-CS-Fixer PHAR
+        run: |
+          curl -Ls https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/latest/download/php-cs-fixer.phar -o php-cs-fixer.phar
+          php -v
+          php php-cs-fixer.phar --version
+
+      - name: Run PHP-CS-Fixer (dry-run)
+        env:
+          OTEL_PHP_AUTOLOAD_DISABLED: "1"
+        run: php php-cs-fixer.phar fix --diff --dry-run -vvv
