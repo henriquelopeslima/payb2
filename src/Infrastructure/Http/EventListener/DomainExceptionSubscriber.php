@@ -74,10 +74,8 @@ final readonly class DomainExceptionSubscriber
             default => 'error',
         };
 
-
-        // Métrica padronizada de erros de transferência
         $this->metrics->incrementCounter('transfer_errors_total', [
-            'exception' => (new ReflectionClass($exception))->getShortName(),
+            'exception' => new ReflectionClass($exception)->getShortName(),
         ]);
 
         if ('warning' === $level) {

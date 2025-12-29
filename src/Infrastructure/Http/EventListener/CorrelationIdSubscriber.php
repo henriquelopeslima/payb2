@@ -7,7 +7,6 @@ namespace App\Infrastructure\Http\EventListener;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Uid\Uuid;
 
 #[AsEventListener(event: KernelEvents::REQUEST, priority: 256)]
 final readonly class CorrelationIdSubscriber

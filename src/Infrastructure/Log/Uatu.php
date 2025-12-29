@@ -8,7 +8,6 @@ use App\Application\Port\Service\LoggerInterface;
 use App\Infrastructure\Http\EventListener\CorrelationIdSubscriber;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Throwable;
 
 final readonly class Uatu implements LoggerInterface
 {
@@ -30,7 +29,6 @@ final readonly class Uatu implements LoggerInterface
             return $context;
         }
 
-        // Não sobrescreve se já existir explicitamente
         return $context + ['correlation_id' => $correlationId];
     }
 
