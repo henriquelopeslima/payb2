@@ -29,6 +29,9 @@ fixtures:
 	make run_command CMD="bin/console doctrine:fixture:load --no-interaction"
 
 test:
+	make run_command CMD="bin/console doctrine:database:create --env=test --if-not-exists"
+	make run_command CMD="bin/console doctrine:migrations:migrate --no-interaction --env=test"
+	make run_command CMD="bin/console doctrine:fixture:load --no-interaction --env=test"
 	make run_command CMD="bin/phpunit"
 
 lint:
