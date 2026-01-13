@@ -65,3 +65,16 @@ services:
         arguments:
             $spanProcessors: [ '@OpenTelemetry\SDK\Trace\SpanProcessor\SimpleSpanProcessor' ]
     OpenTelemetry\API\Trace\TracerProviderInterface: '@OpenTelemetry\SDK\Trace\TracerProvider'
+
+when@test:
+    services:
+        # Disable APCu and using InMemory avoids the dependency and suits tests
+        Prometheus\Storage\Adapter:
+            class: Prometheus\Storage\InMemory
+        Prometheus\CollectorRegistry:
+            arguments:
+                $storageAdapter: '@Prometheus\Storage\Adapter'
+                $registerDefaultMetrics: true
+        # Disable OpenTelemetry span exports in test by using Noop tracer provider
+        OpenTelemetry\API\Trace\TracerProviderInterface:
+            class: OpenTelemetry\API\Trace\NoopTracerProvider
